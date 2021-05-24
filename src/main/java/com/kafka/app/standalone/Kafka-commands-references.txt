@@ -1,0 +1,66 @@
+
+KAFKA COMMANDS REFERENCES:
+
+==================================================================================================
+
+STEPS FOR CONFLUENT KAFKA: (Single Node)
+
+Install Confluent CLI to easily manage all services
+curl -sL https://cnfl.io/cli | sh -s -- -b /Users/vijay/Desktop/DEV/Kafka-PoC/confluent-6.0.0/bin
+
+For random data generation for dev testing
+confluent-hub install confluentinc/kafka-connect-datagen:latest
+
+export CONFLUENT_HOME=/Users/vijay/Desktop/DEV/Kafka-PoC/confluent-6.0.0
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/confluent-6.0.0
+bin/confluent local services start
+bin/confluent local services stop
+
+Navigate to the Control Center web interface at -> http://localhost:9021
+
+==================================================================================================
+ 
+STEPS FOR APACHE KAFKA: (Three Nodes)
+
+Start Zookeeper Cluster: (localhost:2181,localhost:2182,localhost:2183)
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/zookeeperNode1/zkNode1 && bin/zkServer.sh start-foreground
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/zookeeperNode2/zkNode2 && bin/zkServer.sh start-foreground
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/zookeeperNode3/zkNode3 && bin/zkServer.sh start-foreground
+
+Zookeeper Status:
+echo stat | nc localhost 2181
+echo dump | nc localhost 2181
+
+Start Kafka Cluster: (localhost:9092,localhost:9093,localhost:9094)
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/kafkaNode1/kafkaNode1 && bin/kafka-server-start.sh config/server.properties
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/kafkaNode2/kafkaNode2 && bin/kafka-server-start.sh config/server.properties
+
+cd /Users/vijay/Desktop/DEV/Kafka-PoC/kafkaNode3/kafkaNode3 && bin/kafka-server-start.sh config/server.properties
+
+Topic:
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic
+
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test-topic --partitions 3 --replication-factor 3
+
+Console-Producer and subscriber:
+bin/kafka-console-producer.sh --bootstrap-server localhost:9092,localhost:9093,localhost:9094 --topic test-topic
+
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092,localhost:9093,localhost:9094 --topic test-topic --from-beginning
+
+==================================================================================================
+
+MORE:
+
+https://docs.cloudera.com/documentation/kafka/latest/topics/kafka_performance.html
+
+https://www.confluent.io/kafka-summit-lon19/from-zero-to-hero-with-kafka-connect/
